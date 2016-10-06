@@ -308,10 +308,11 @@ pub type uint_fast32_t = uint32_t;
 pub type uint_fast64_t = uint64_t;
 pub type intmax_t = ::std::os::raw::c_long;
 pub type uintmax_t = ::std::os::raw::c_ulong;
+
 #[derive(Copy, Clone)]
 #[repr(u32)]
 #[derive(Debug)]
-pub enum Enum_Unnamed2 { HV_VM_DEFAULT = 0, }
+pub enum VMOptions { HV_VM_DEFAULT = 0, }
 pub type hv_vm_options_t = uint64_t;
 #[derive(Copy, Clone)]
 #[repr(u32)]
@@ -388,6 +389,18 @@ pub enum hv_x86_reg_t {
     HV_X86_REGISTERS_MAX = 51,
 }
 
+#[derive(Copy, Clone)]
+#[repr(u32)]
+#[derive(Debug)]
+pub enum hv_vmx_capability_t {
+  HV_VMX_CAP_PINBASED = 0,         /* pin-based VMX capabilities */
+  HV_VMX_CAP_PROCBASED = 1,        /* primary proc.-based VMX capabilities */
+  HV_VMX_CAP_PROCBASED2 = 2,       /* second. proc.-based VMX capabilities */
+  HV_VMX_CAP_ENTRY = 3,            /* VM-entry VMX capabilities */
+  HV_VMX_CAP_EXIT = 4,             /* VM-exit VMX capabilities */
+  HV_VMX_CAP_PREEMPTION_TIMER = 32 /* VMX preemption timer frequency */
+}
+
 #[link(name = "Hypervisor", kind = "framework")]
 extern "C" {
     pub fn hv_vm_create(flags: hv_vm_options_t) -> hv_return_t;
@@ -425,4 +438,12 @@ extern "C" {
      -> hv_return_t;
     pub fn hv_vcpu_get_exec_time(vcpu: hv_vcpuid_t, time: *mut uint64_t)
      -> hv_return_t;
+
+
+    /* hv_vmx.h */
+    pub fn hv_vmx_vcpu_read_vmcs(vcpu: hv_vcpuid_t, field: uint32_t, value: *mut uint64_t) -> hv_return_t;
+    pub fn hv_vmx_vcpu_write_vmcs(vcpu: hv_vcpuid_t, field: uint32_t, value: uint64_t) -> hv_return_t;
+    pub fn hv_vmx_read_capability(field: hv_vmx_capability_t, value: *mut uint64_t) -> hv_return_t;
+    pub fn hv_vmx_vcpu_set_apic_address(vcpu: hv_vcpuid_t, gpa: hv_gpaddr_t) -> hv_return_t;
+   
 }
