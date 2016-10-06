@@ -387,6 +387,8 @@ pub enum hv_x86_reg_t {
     HV_X86_XCR0 = 50,
     HV_X86_REGISTERS_MAX = 51,
 }
+
+#[link(name = "Hypervisor", kind = "framework")]
 extern "C" {
     pub fn hv_vm_create(flags: hv_vm_options_t) -> hv_return_t;
     pub fn hv_vm_destroy() -> hv_return_t;
